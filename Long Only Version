@@ -1,0 +1,24 @@
+//@version=5
+strategy("Simple MA Crossover (Long Only)", overlay=true, margin_long=100, default_qty_type=strategy.percent_of_equity, default_qty_value=100)
+
+// Parameters
+fastLength = input.int(50, "Fast MA Length")
+slowLength = input.int(200, "Slow MA Length")
+
+// Moving Averages
+fastMA = ta.sma(close, fastLength)
+slowMA = ta.sma(close, slowLength)
+
+plot(fastMA, color=color.blue, title="Fast MA")
+plot(slowMA, color=color.red, title="Slow MA")
+
+// Entry & Exit Conditions
+longCondition  = ta.crossover(fastMA, slowMA)
+exitCondition  = ta.crossunder(fastMA, slowMA)
+
+// Orders
+if (longCondition)
+    strategy.entry("Long", strategy.long)
+
+if (exitCondition)
+    strategy.close("Long")
